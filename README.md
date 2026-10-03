@@ -27,35 +27,6 @@ npm run dev                  # http://localhost:5173
 
 `localhost` is already an authorized domain for Google sign-in.
 
-## 3. Deploy for free (Firebase Hosting)
-
-```bash
-npm install -g firebase-tools
-firebase login
-firebase use --add            # pick your project
-npm run deploy                # builds, deploys the site + firestore.rules
-```
-
-Your app will be live at `https://<project-id>.web.app`. That domain is authorized for Google sign-in automatically.
-
-> **Important:** `npm run deploy` also publishes `firestore.rules`, which lock every user to their own data. If you deploy the site somewhere else, still run `firebase deploy --only firestore:rules` once.
-
-### Automatic deploys (GitHub Actions)
-
-`.github/workflows/deploy.yml` builds every push and PR. Pushes to `main` also deploy the site and `firestore.rules`.
-
-The Firebase web config lives in `.env.production`. It's committed on purpose: these values ship in the public JS bundle anyway. The only secret is a deploy key, which you set up once:
-
-1. Open the [Google Cloud service accounts page](https://console.cloud.google.com/iam-admin/serviceaccounts?project=habbit-tracker-55e83) and click **Create service account** (name it e.g. `github-deploy`).
-2. Grant it the **Firebase Admin** role, then click **Done**.
-3. Open the new account. Go to **Keys → Add key → Create new key → JSON**. A `.json` file downloads.
-4. In GitHub, go to **repo → Settings → Secrets and variables → Actions → New repository secret**. Name it `FIREBASE_SERVICE_ACCOUNT` and paste the entire JSON file contents. Then delete the downloaded file.
-5. Re-run the workflow from the **Actions** tab, or push to `main`.
-
-### Alternative: Vercel / Netlify / Cloudflare Pages
-
-Import the GitHub repo, set build command `npm run build`, output dir `dist`, and add the six `VITE_FIREBASE_*` env vars. Then add the deployed domain under **Firebase → Authentication → Settings → Authorized domains**.
-
 ## Data model
 
 Everything is stored under `users/{uid}/` in Firestore:
