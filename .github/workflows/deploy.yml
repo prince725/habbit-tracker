@@ -41,5 +41,6 @@ jobs:
       - uses: google-github-actions/auth@v2
         with:
           credentials_json: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
-      # Deploys the site and the Firestore security rules (project comes from .firebaserc)
-      - run: npx --yes firebase-tools@latest deploy --only hosting,firestore:rules --non-interactive
+      # Deploys the site (project comes from .firebaserc). Firestore rules are published
+      # manually: firebase deploy --only firestore:rules, or paste firestore.rules in the console.
+      - run: npx --yes firebase-tools@latest deploy --only hosting --non-interactive
